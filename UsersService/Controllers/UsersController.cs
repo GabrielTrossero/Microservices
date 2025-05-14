@@ -16,8 +16,10 @@ namespace UsersService.Controllers
             _context = context;
         }
 
+
         [HttpGet]
         public IActionResult GetAll() => Ok(_context.Users.ToList());
+
 
         [HttpPost]
         public IActionResult Create(User user)
@@ -26,5 +28,16 @@ namespace UsersService.Controllers
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetAll), new { id = user.Id }, user);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> GetById(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                return NotFound();
+
+            return user;
+        }
+
     }
 }

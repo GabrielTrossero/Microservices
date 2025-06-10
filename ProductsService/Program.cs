@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProductsService.Data;
+using ProductsService.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,7 @@ builder.Services.AddHttpClient("UsersAPI", client =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<EventBusConsumer>();
 
 var app = builder.Build();
 
@@ -31,6 +33,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
+// Iniciar el consumidor de eventos
+var eventBusConsumer = app.Services.GetRequiredService<EventBusConsumer>();
 
 app.MapControllers();
 app.Run();

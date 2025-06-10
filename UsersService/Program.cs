@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using UsersService.Data;
+using UsersService.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,7 @@ builder.Services.AddHttpClient("ProductsAPI", client =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<EventBusPublisher>();
 
 var app = builder.Build();
 

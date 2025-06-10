@@ -13,15 +13,19 @@ namespace ProductsService.Messaging
 
         public EventBusConsumer()
         {
-            var factory = new ConnectionFactory { HostName = "rabbitmq" };
+            var factory = new ConnectionFactory();
+
+            // Detecta si está corriendo dentro de un contenedor
+            var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+            factory.HostName = isDocker ? "rabbitmq" : "localhost";
 
             _connection = factory.CreateConnection(); // Creamos la conexion
             _channel = _connection.CreateModel(); // Creamos el canal
 
-            _channel.ExchangeDeclare(exchange: "product_events", type: ExchangeType.Fanout); // Declaramos el exchange
+            _channel.ExchangeDeclare(exchange: "user_events", type: ExchangeType.Fanout); // Declaramos el exchange
 
             var queueName = _channel.QueueDeclare().QueueName; // Creamos una cola
-            _channel.QueueBind(queue: queueName, exchange: "product_events", routingKey: ""); // Asociamos la cola al canal
+            _channel.QueueBind(queue: queueName, exchange: "user_events", routingKey: ""); // Asociamos la cola al canal
 
             Console.WriteLine($"Esperando mensajes en {queueName}...");
 

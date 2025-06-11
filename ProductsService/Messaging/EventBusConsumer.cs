@@ -18,19 +18,21 @@ namespace ProductsService.Messaging
 
         public EventBusConsumer(IServiceProvider serviceProvider)
         {
-            var factory = new ConnectionFactory();
+            _serviceProvider = serviceProvider;
 
-            // Detecta si está corriendo dentro de un contenedor
-            var isDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
-            factory.HostName = isDocker ? "rabbitmq" : "localhost";
+            var factory = new ConnectionFactory
+            {
+                HostName = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true" ? "rabbitmq" : "localhost"             // Detecta si está corriendo dentro de un contenedor
+            };
 
             _connection = factory.CreateConnection(); // Creamos la conexion
             _channel = _connection.CreateModel(); // Creamos el canal
-
             _channel.ExchangeDeclare(exchange: "user_events", type: ExchangeType.Fanout); // Declaramos el exchange
 
             var queueName = _channel.QueueDeclare().QueueName; // Creamos una cola
             _channel.QueueBind(queue: queueName, exchange: "user_events", routingKey: ""); // Asociamos la cola al canal
+
+
 
             var consumer = new EventingBasicConsumer(_channel); // Tengo el consumer
             consumer.Received += async (model, ea) =>
@@ -43,7 +45,7 @@ namespace ProductsService.Messaging
 
                 if (userCreatedEvent != null)
                 {
-                    using (var scope = serviceProvider.CreateScope())
+                    using (var scope = _serviceProvider.CreateScope())
                     {
                         var productService = scope.ServiceProvider.GetRequiredService<IProductService>();
 

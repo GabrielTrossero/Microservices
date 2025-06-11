@@ -9,6 +9,7 @@ namespace ProductsService.Services
         Task<Product> Create(Product product);
         Task<Product> GetById(int id);
         Task<List<Product>> GetAll();
+        Task AssignDefaultProductToUser(int userId, string userName);
     }
 
 
@@ -38,6 +39,19 @@ namespace ProductsService.Services
         {
             var products = await _context.Products.ToListAsync();
             return products;
+        }
+
+        public async Task AssignDefaultProductToUser(int userId, string userName)
+        {
+            var product = new Product
+            {
+                Nombre = $"Producto para {userName}",
+                Precio = 100,
+                Id_User = userId
+            };
+
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
         }
     }
 }

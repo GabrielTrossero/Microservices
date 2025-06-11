@@ -6,6 +6,7 @@ using ProductsService.Event;
 using ProductsService.Models;
 using Microsoft.Extensions.DependencyInjection;
 using ProductsService.Data;
+using ProductsService.Services;
 
 namespace ProductsService.Messaging
 {
@@ -31,10 +32,8 @@ namespace ProductsService.Messaging
             var queueName = _channel.QueueDeclare().QueueName; // Creamos una cola
             _channel.QueueBind(queue: queueName, exchange: "user_events", routingKey: ""); // Asociamos la cola al canal
 
-            Console.WriteLine($"Esperando mensajes en {queueName}...");
-
             var consumer = new EventingBasicConsumer(_channel); // Tengo el consumer
-            consumer.Received += (model, ea) =>
+            consumer.Received += async (model, ea) =>
             {
                 var body = ea.Body.ToArray(); // Obtnemos el array de bytes
                 var message = Encoding.UTF8.GetString(body); // Transformo de bytes a string
@@ -42,17 +41,15 @@ namespace ProductsService.Messaging
                 // Procesar el mensaje, por ejemplo, deserializar el evento y procesarlo
                 var userCreatedEvent = JsonSerializer.Deserialize<UserCreatedEvent>(message);
 
-                var product = new Product
+                if (userCreatedEvent != null)
                 {
-                    Nombre = "Producto de regalo",
-                    Id_User = userCreatedEvent.Id
-                };
+                    using (var scope = serviceProvider.CreateScope())
+                    {
+                        var productService = scope.ServiceProvider.GetRequiredService<IProductService>();
 
-                using (var scope = serviceProvider.CreateScope())
-                {
-                    var dbContext = scope.ServiceProvider.GetRequiredService<ProductsDbContext>();
-                    dbContext.Products.Add(product);
-                    dbContext.SaveChanges();
+                        // Usar el servicio para asignar un producto predeterminado al usuario
+                        await productService.AssignDefaultProductToUser(userCreatedEvent.Id, userCreatedEvent.Nombre);
+                    }
                 }
 
             };

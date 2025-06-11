@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using UsersService.Data;
 using UsersService.Messaging;
+using UsersService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<EventBusPublisher>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

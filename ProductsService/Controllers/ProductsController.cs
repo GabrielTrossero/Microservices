@@ -22,6 +22,8 @@ namespace ProductsService.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var product = await _productService.GetById(id);
+            if(product == null) 
+                return NotFound();
             return Ok(product);
         }
 
@@ -36,8 +38,8 @@ namespace ProductsService.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Product product)
         {
-            var created = await _productService.Create(product);
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            var productCreated = await _productService.Create(product);
+            return CreatedAtAction(nameof(GetById), new { id = productCreated.Id }, productCreated);
         }
 
         [HttpGet("usuarios")]

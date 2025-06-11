@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProductsService.Data;
 using ProductsService.Models;
+using ProductsService.Services;
 
 namespace ProductsService.Controllers
 {
@@ -8,24 +10,34 @@ namespace ProductsService.Controllers
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
-        private readonly ProductsDbContext _context;
+        private readonly IProductService _productService;
 
-        public ProductsController(ProductsDbContext context)
+        public ProductsController(IProductService productService)
         {
-            _context = context;
+            _productService = productService;
         }
 
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var product = await _productService.GetById(id);
+            return Ok(product);
+        }
+
         [HttpGet]
-        public IActionResult GetAll() => Ok(_context.Products.ToList());
+        public async Task<IActionResult> GetAll()
+        {
+            var products = await _productService.GetAll();
+            return Ok(products);
+        }
 
 
         [HttpPost]
-        public IActionResult Create(Product product)
+        public async Task<IActionResult> Create(Product product)
         {
-            _context.Products.Add(product);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetAll), new { id = product.Id }, product);
+            var created = await _productService.Create(product);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
         [HttpGet("usuarios")]

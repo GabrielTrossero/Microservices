@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductsService.Data;
 using ProductsService.Models;
+using ProductsService.Messaging;
 
 namespace ProductsService.Services
 {

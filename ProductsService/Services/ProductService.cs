@@ -11,6 +11,7 @@ namespace ProductsService.Services
         Task<Product> GetById(int id);
         Task<List<Product>> GetAll();
         Task AssignDefaultProductToUser(int userId, string userName);
+        Task<List<Product>> GetProductsByUserId(int userId);
     }
 
 
@@ -39,6 +40,14 @@ namespace ProductsService.Services
         public async Task<List<Product>> GetAll()
         {
             var products = await _context.Products.ToListAsync();
+            return products;
+        }
+
+        public async Task<List<Product>> GetProductsByUserId(int userId)
+        {
+            var products = await _context.Products
+                .Where(p => p.Id_User == userId)
+                .ToListAsync();
             return products;
         }
 

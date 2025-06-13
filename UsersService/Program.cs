@@ -5,6 +5,12 @@ using UsersService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Detectar si estamos en Docker
+var inDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+var productsBaseUrl = inDocker
+    ? builder.Configuration["Services:ProductsBaseUrlDocker"]
+    : builder.Configuration["Services:ProductsBaseUrl"];
+
 // Base de datos
 builder.Services.AddDbContext<UsersDbContext>(opt =>
     opt.UseSqlite("Data Source=users.db"));
@@ -20,7 +26,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<EventBusPublisher>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddHttpClient<IUserService, UserService>(client =>
+{
+    client.BaseAddress = new Uri(productsBaseUrl);
+});
 
 var app = builder.Build();
 

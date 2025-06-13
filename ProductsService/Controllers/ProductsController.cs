@@ -42,6 +42,14 @@ namespace ProductsService.Controllers
             return CreatedAtAction(nameof(GetById), new { id = productCreated.Id }, productCreated);
         }
 
+        [HttpGet("by-user/{userId}")]
+        public async Task<IActionResult> GetProductsByUserId(int userId)
+        {
+            var products = await _productService.GetProductsByUserId(userId);
+            return Ok(products);
+        }
+
+
         [HttpGet("usuarios")]
         public async Task<IActionResult> GetUsersFromUserService([FromServices] IHttpClientFactory httpClientFactory)
         {

@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using UsersService.Data;
+using UsersService.DTO;
 using UsersService.Messaging;
 using UsersService.Models;
 using UsersService.Services;
@@ -9,6 +12,7 @@ namespace UsersService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -44,5 +48,13 @@ namespace UsersService.Controllers
             // Devolver la respuesta adecuada
             return CreatedAtAction(nameof(GetAll), new { id = userCreated.Id }, userCreated);
         }
+
+        [HttpGet("with-products")]
+        public async Task<IActionResult> GetUsersWithProducts()
+        {
+            var usersDTO = await _userService.GetUsersWithProducts();
+            return Ok(usersDTO);
+        }
+
     }
 }

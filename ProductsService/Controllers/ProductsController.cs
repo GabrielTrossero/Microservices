@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProductsService.Data;
 using ProductsService.Models;
@@ -8,6 +9,7 @@ namespace ProductsService.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -41,6 +43,14 @@ namespace ProductsService.Controllers
             var productCreated = await _productService.Create(product);
             return CreatedAtAction(nameof(GetById), new { id = productCreated.Id }, productCreated);
         }
+
+        [HttpGet("by-user/{userId}")]
+        public async Task<IActionResult> GetProductsByUserId(int userId)
+        {
+            var products = await _productService.GetProductsByUserId(userId);
+            return Ok(products);
+        }
+
 
         [HttpGet("usuarios")]
         public async Task<IActionResult> GetUsersFromUserService([FromServices] IHttpClientFactory httpClientFactory)

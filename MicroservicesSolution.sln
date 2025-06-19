@@ -3,17 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsersService", "UsersService\UsersService.csproj", "{20F61381-F5AA-49D5-BFDD-EE52BB2E0A86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UsersService", "UsersService\UsersService.csproj", "{20F61381-F5AA-49D5-BFDD-EE52BB2E0A86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductsService", "ProductsService\ProductsService.csproj", "{2B4D3950-6643-40AF-B979-3FDCF466E514}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductsService", "ProductsService\ProductsService.csproj", "{2B4D3950-6643-40AF-B979-3FDCF466E514}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{9221D8B7-E894-4FD4-83D9-54198A274A68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{20F61381-F5AA-49D5-BFDD-EE52BB2E0A86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -24,5 +23,15 @@ Global
 		{2B4D3950-6643-40AF-B979-3FDCF466E514}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B4D3950-6643-40AF-B979-3FDCF466E514}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B4D3950-6643-40AF-B979-3FDCF466E514}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9221D8B7-E894-4FD4-83D9-54198A274A68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9221D8B7-E894-4FD4-83D9-54198A274A68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9221D8B7-E894-4FD4-83D9-54198A274A68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9221D8B7-E894-4FD4-83D9-54198A274A68}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C836607C-7F3A-4AFE-99B8-E38FE06E7BC3}
 	EndGlobalSection
 EndGlobal
